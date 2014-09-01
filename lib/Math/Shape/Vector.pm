@@ -132,6 +132,17 @@ sub divide {
     1;
 }
 
+=head2 get_length
+
+Returns the vector length.
+
+=cut
+
+sub get_length {
+    my $self = shift;
+    sqrt $self->{x} ** 2 + $self->{y} ** 2
+}
+
 =head1 REPOSITORY
 
 L<https://github.com/sillymoose/Math-Shape-Vector.git>
