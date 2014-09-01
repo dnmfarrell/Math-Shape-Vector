@@ -7,6 +7,21 @@ use Carp;
 
 # ABSTRACT: A 2d vector object in cartesian space
 
+=for HTML <a href="https://travis-ci.org/sillymoose/Math-Shape-Vector"><img src="https://travis-ci.org/sillymoose/Math-Shape-Vector.svg?branch=master"></a> <a href='https://coveralls.io/r/sillymoose/Math-Shape-Vector'><img src='https://coveralls.io/repos/sillymoose/Math-Shape-Vector/badge.png' alt='Coverage Status' /></a>
+
+=head1 SYNOPSIS
+
+    use Math::Shape::Vector;
+
+    my $v1 = Math::Shape::Vector->new(3, 5);
+    my $v2 = Math::Shape::Vector->new(1, 17);
+
+    $v1->add_vector($v2);
+    $v1->negate;
+    $v1->multiply(5);
+    $v1->is_equal($v2);
+
+
 =head1 METHODS
 
 =head2 new
@@ -117,7 +132,7 @@ sub divide {
     1;
 }
 
-=head1 RESPOSITORY
+=head1 REPOSITORY
 
 L<https://github.com/sillymoose/Math-Shape-Vector.git>
 
