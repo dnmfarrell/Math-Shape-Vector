@@ -132,15 +132,50 @@ sub divide {
     1;
 }
 
+=head2 rotate
+
+Rotates the vector in radians.
+
+    use Math::Trig ':pi';
+
+    $vector->rotate(pi);
+
+=cut
+
+sub rotate {
+    croak 'incorrect number of args' unless @_ == 2;
+    my ($self, $radians) = @_;
+
+    $self->{x} = $self->{x} * cos($radians) - $self->{y} * sin($radians);
+    $self->{y} = $self->{x} * sin($radians) + $self->{y} * cos($radians);
+    1;
+}
+
+=head2 get_dot_product
+
+Returns the dot product. Requires another Math::Shape::Vector object as an argument.
+
+=cut
+
+sub get_dot_product {
+    croak 'must pass a vector object' unless $_[1]->isa('Math::Shape::Vector');
+    my ($self, $v2) = @_;
+    $self->{x} * $v2->{x} + $self->{y} * $v2->{y};
+}
+
 =head2 get_length
 
 Returns the vector length.
+
+    $vector->get_length;
 
 =cut
 
 sub get_length {
     my $self = shift;
-    sqrt $self->{x} ** 2 + $self->{y} ** 2
+    # avoid division by zero for null vectors
+    return 0 unless $self->{x} && $self->{y};
+    sqrt $self->{x} ** 2 + $self->{y} ** 2;
 }
 
 =head1 REPOSITORY

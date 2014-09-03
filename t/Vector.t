@@ -73,7 +73,9 @@ dies_ok sub { $v11->divide(1,3) }, 'divide wrong args';
 # get_length
 ok my $v12 = Math::Shape::Vector->new(5, 5);
 ok my $v13 = Math::Shape::Vector->new(7, 3);
+ok my $v14 = Math::Shape::Vector->new(0, 0);
 is sprintf( "%.3f", $v12->get_length), 7.071;
 is sprintf( "%.3f", $v13->get_length), 7.616;
+is $v14->get_length, 0, 'null vector length is zero';
 
 done_testing();
