@@ -51,7 +51,7 @@ sub add_vector {
     my ($self, $v2) = @_;
     $self->{x} += $v2->{x};
     $self->{y} += $v2->{y};
-    1;
+    $self;
 }
 
 =head2 subtract_vector
@@ -67,7 +67,7 @@ sub subtract_vector {
     my ($self, $v2) = @_;
     $self->{x} -= $v2->{x};
     $self->{y} -= $v2->{y};
-    1;
+    $self;
 }
 
 =head2 negate
@@ -82,7 +82,7 @@ sub negate {
     my $self = shift;
     $self->{x} = - $self->{x};
     $self->{y} = - $self->{y};
-    1;
+    $self;
 }
 
 =head2 is_equal
@@ -113,7 +113,7 @@ sub multiply {
     my ($self, $multiplier) = @_;
     $self->{x} = $self->{x} * $multiplier;
     $self->{y} = $self->{y} * $multiplier;
-    1;
+    $self;
 }
 
 =head2 divide
@@ -127,9 +127,10 @@ Divides the vector's x and y values by a number.
 sub divide {
     croak 'incorrect number of args' unless @_ == 2;
     my ($self, $divisor) = @_;
-    $self->{x} = $self->{x} / $divisor;
-    $self->{y} = $self->{y} / $divisor;
-    1;
+    # avoid division by zero
+    $self->{x} = $divisor ? $self->{x} / $divisor : 0;
+    $self->{y} = $divisor ? $self->{y} / $divisor : 0;
+    $self;
 }
 
 =head2 rotate
@@ -148,7 +149,7 @@ sub rotate {
 
     $self->{x} = $self->{x} * cos($radians) - $self->{y} * sin($radians);
     $self->{y} = $self->{x} * sin($radians) + $self->{y} * cos($radians);
-    1;
+    $self;
 }
 
 =head2 get_dot_product
@@ -178,6 +179,45 @@ sub get_length {
     sqrt $self->{x} ** 2 + $self->{y} ** 2;
 }
 
+=head2 convert_to_unit_vector
+
+Converts the vector to have a length of 1.
+
+    $vector->convert_to_unit_vector;
+
+=cut
+
+sub convert_to_unit_vector {
+    my $self = shift;
+
+    my $length = $self->get_length;
+    $length > 0 ? $self->divide($length) : 1;
+    $self;
+}
+
+=head2 project
+
+Maps the vector to another vector. Requires a Math::Shape::Vector object as an argument.
+
+    $vector->project($vector_2);
+
+=cut
+
+sub project {
+    croak 'must pass a vector object' unless $_[1]->isa('Math::Shape::Vector');
+    my ($self, $v2) = @_;
+
+    my $d = $v2->get_dot_product($v2);
+    if ($d > 0) {
+        $v2->multiply( $self->get_dot_product($v2) / $d );
+    }
+    else {
+        $self = $v2;
+    }
+    $self;
+}
+
+
 =head1 REPOSITORY
 
 L<https://github.com/sillymoose/Math-Shape-Vector.git>
@@ -189,3 +229,4 @@ The source code for this object was inspired by the code in Thomas Schwarzl's 2d
 =cut
 
 1;
+

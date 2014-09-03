@@ -8,7 +8,7 @@ Math::Shape::Vector - A 2d vector object in cartesian space
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 SYNOPSIS
 
@@ -68,9 +68,35 @@ Divides the vector's x and y values by a number.
 
     $vector->divide(2);
 
+=head2 rotate
+
+Rotates the vector in radians.
+
+    use Math::Trig ':pi';
+
+    $vector->rotate(pi);
+
+=head2 get_dot_product
+
+Returns the dot product. Requires another Math::Shape::Vector object as an argument.
+
 =head2 get_length
 
 Returns the vector length.
+
+    $vector->get_length;
+
+=head2 convert_to_unit_vector
+
+Converts the vector to have a length of 1.
+
+    $vector->convert_to_unit_vector;
+
+=head2 project
+
+Maps the vector to another vector. Requires a Math::Shape::Vector object as an argument.
+
+    $vector->project($vector_2);
 
 =head1 REPOSITORY
 
