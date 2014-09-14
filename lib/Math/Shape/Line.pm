@@ -39,8 +39,8 @@ sub is_equivalent
     {
         return 0;
     }
-    my $base = $_[0]->{direction};
-    $base->subtract($_[1]->{base});
+    my $base = Math::Shape::Vector->new($_[0]->{direction}->{x}, $_[0]->{direction}->{y});
+    $base->subtract_vector($_[1]->{base});
     $base->is_parallel($_[0]->{direction});
 }
 
@@ -61,7 +61,7 @@ sub collides
 
     if($_[0]->{direction}->is_parallel($_[1]->{direction}))
     {
-        $_[0]->is_equivalent($_[1]);
+        return $_[0]->is_equivalent($_[1]);
     }
     1;
 }

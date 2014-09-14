@@ -104,7 +104,7 @@ Maps the vector to another vector. Requires a Math::Shape::Vector object as an a
 
 =head2 is_parallel
 
-Boolean method that returns 1 if the vector is parallel with another vector. Requires a Math::Shape::Vector object as an argument.
+Boolean method that returns 1 if the vector is parallel with another vector else returns zero. Requires a Math::Shape::Vector object as an argument.
 
     my $v2 = Math::Shape::Vector(1, 2);
 

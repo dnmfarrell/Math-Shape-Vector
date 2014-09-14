@@ -128,4 +128,8 @@ is $v29->collides($v27), 0;
 
 # enclosed angle
 # rotate_90
+ok my $v30 = Math::Shape::Vector->new(3, 8);
+ok $v30->rotate_90;
+is $v30->{x}, -8;
+is $v30->{y}, 3;
 done_testing();

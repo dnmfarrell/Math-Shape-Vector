@@ -163,8 +163,9 @@ Rotates the vector 90 degrees anti-clockwise
 sub rotate_90
 {
     my $self = shift;
+    my $x = $self->{x};
     $self->{x} = - $self->{y};
-    $self->{y} = $self->{x};
+    $self->{y} = $x;
     $self;
 }
 
@@ -235,7 +236,7 @@ sub project {
 
 =head2 is_parallel
 
-Boolean method that returns 1 if the vector is parallel with another vector. Requires a Math::Shape::Vector object as an argument.
+Boolean method that returns 1 if the vector is parallel with another vector else returns zero. Requires a Math::Shape::Vector object as an argument.
 
     my $v2 = Math::Shape::Vector(1, 2);
 
@@ -250,9 +251,9 @@ sub is_parallel
 {
     croak 'must pass a vector object' unless $_[1]->isa('Math::Shape::Vector');
     my ($self, $v2) = @_;
-    my $vector_na = $self;
+    my $vector_na = Math::Shape::Vector->new($self->{x}, $self->{y});
     $vector_na->rotate_90;
-    equal_floats(0, $self->dot_product($v2));
+    equal_floats(0, $vector_na->dot_product($v2));
 }
 
 =head2 enclosed_angle

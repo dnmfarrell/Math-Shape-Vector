@@ -17,17 +17,12 @@ is $line2->is_equivalent($line3), 0;
 # collides
 is $line1->collides($line2), 1;
 is $line2->collides($line1), 1;
-is $line2->collides($line3), 1;
+is $line2->collides($line3), 0;
 
-ok my $line4 = Math::Shape::Line->new(3, 5, 5,-1);
-ok my $line5 = Math::Shape::Line->new(3, 5, 5, 2);
-ok my $line6 = Math::Shape::Line->new(3, 2, 5, 2);
-ok my $line7 = Math::Shape::Line->new(8, 4, 5, -1);
-
-is $line4->collides($line5), 1;
-is $line4->collides($line6), 1;
-is $line5->collides($line6), 1; # error ?
-is $line4->collides($line7), 1;
+ok my $line4 = Math::Shape::Line->new(3, 3, 2, 2);
+ok my $line5 = Math::Shape::Line->new(1, 5, 2, 2);
+is $line4->{direction}->is_parallel($line5->{direction}), 1;
+is $line4->collides($line5), 0;
 
 done_testing();
 
