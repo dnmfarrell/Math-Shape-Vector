@@ -7,7 +7,7 @@ use Carp;
 use Math::Shape::Utils;
 use Math::Trig;
 
-# ABSTRACT: A 2d vector object in cartesian space
+# ABSTRACT: A 2d vector library in cartesian space
 
 =for HTML <a href="https://travis-ci.org/sillymoose/Math-Shape-Vector"><img src="https://travis-ci.org/sillymoose/Math-Shape-Vector.svg?branch=master"></a> <a href='https://coveralls.io/r/sillymoose/Math-Shape-Vector'><img src='https://coveralls.io/repos/sillymoose/Math-Shape-Vector/badge.png' alt='Coverage Status' /></a>
 
@@ -23,6 +23,30 @@ use Math::Trig;
     $v1->multiply(5);
     $v1->is_equal($v2);
 
+
+=head1 DESCRIPTION
+
+This module contains 2d vector-based objects intended as base classes for 2d games programming. Most of the objects have collision detection (among other methods). The objects available are:
+
+=over
+
+=item *
+
+L<Math::Shape::Vector> - a 2d vector (this module)
+
+=item *
+
+L<Math::Shape::Line> - an infinite 2d line
+
+=item *
+
+L<Math::Shape::LineSegment> - a finite 2d line (with a start and end)
+
+=item *
+
+L<Math::Shape::Range> - a number range (e.g 1 through 20)
+
+=back
 
 =head1 METHODS
 

@@ -32,8 +32,6 @@ sub overlap
 sub equal_floats
 {
     my $threshold = 1.0 / 8192.0;
-    print "threshold: $threshold\n";
-    print "Difference: " . abs($_[0] - $_[1]) . "\n";
     abs($_[0] - $_[1]) < $threshold ? 1 : 0;
 }
 
