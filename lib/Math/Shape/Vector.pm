@@ -46,6 +46,18 @@ L<Math::Shape::LineSegment> - a finite 2d line (with a start and end)
 
 L<Math::Shape::Range> - a number range (e.g 1 through 20)
 
+=item *
+
+L<Math::Shape::Circle> - a 2d Circle
+
+=item *
+
+L<Math::Shape::Rectangle> - a 2d axis-oriented rectangle
+
+=item *
+
+L<Math::Shape::OrientedRectangle> - a 2d oriented rectangle
+
 =back
 
 =head1 METHODS
