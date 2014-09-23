@@ -28,20 +28,31 @@ sub new {
 
 =head2 collides
 
-Boolean method returns 1 if circle collides with another circle, else returns 0. Requires another circle object as an argument.
+Boolean method returns 1 if circle collides with another object, else returns 0. Requires another L<Math::Shape::Vector> library object as an argument.
 
-    my $is collision = $circle->collides($other_circle);
+    my $is_collision = $circle->collides($other_circle);
 
 =cut
 
-sub collides {
-    croak 'collides must be called with a Math::Shape::Circle object' unless $_[1]->isa('Math::Shape::Circle');
-    my ($self, $other_circle) = @_;
+sub collides
+{
+    my ($self, $other_obj) = @_;
 
-    my $radius_sum = $self->{radius} + $other_circle->{radius};
-    my $vector = Math::Shape::Vector->new( $self->{center}->{x}, $self->{center}->{y} );
-    $vector->subtract_vector($other_circle->{center});
-    $vector->length <= $radius_sum ? 1 :0;
+    if ($other_obj->isa('Math::Shape::Circle'))
+    {
+        my $vector = Math::Shape::Vector->new( $self->{center}{x}, $self->{center}{y} );
+        $vector->subtract_vector($other_obj->{center});
+        $vector->length <= $self->{radius} + $other_obj->{radius} ? 1 : 0;
+    }
+    elsif ($other_obj->isa('Math::Shape::Vector'))
+    {
+        my $vector = Math::Shape::Vector->new($self->{center}{x}, $self->{center}{y});
+        $vector->subtract_vector($other_obj);
+        $vector->length <= $self->{radius} ? 1 : 0;
+    }
+    else
+    {
+        croak 'collides must be called with a Math::Shape::Vector library object';
+    }
 }
-
 1;

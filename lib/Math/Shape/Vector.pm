@@ -228,8 +228,10 @@ Returns the vector length.
 sub length {
     my $self = shift;
     # avoid division by zero for null vectors
-    return 0 unless $self->{x} && $self->{y};
-    sqrt $self->{x} ** 2 + $self->{y} ** 2;
+    my $sum_of_squares = ( $self->{x} || 0 ) ** 2
+                         + ( $self->{y} || 0 ) ** 2;
+    return 0 unless $sum_of_squares;
+    sqrt $sum_of_squares;
 }
 
 =head2 convert_to_unit_vector
