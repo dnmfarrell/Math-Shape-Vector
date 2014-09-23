@@ -113,8 +113,8 @@ is $v23->{x} * $v21->{x} + $v23->{y} * $v21->{y}, $v23->dot_product($v21);
 ok my $v24 = Math::Shape::Vector->new(8, 2);
 ok my $v25 = Math::Shape::Vector->new(-2, 8);
 ok my $v26 = Math::Shape::Vector->new(-2, 8);
-is $v24->project($v25)->{x}, 8;
-is $v25->project($v26)->{x}, 0;
+is $v24->project($v25)->{x}, 0;
+is $v25->project($v26)->{x}, -2;
 
 # collides
 ok my $v27 = Math::Shape::Vector->new(8, 2);

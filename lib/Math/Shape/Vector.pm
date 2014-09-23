@@ -264,10 +264,13 @@ sub project {
 
     my $d = $v2->dot_product($v2);
     if ($d > 0) {
-        $v2->multiply( $self->dot_product($v2) / $d );
+        my $v3 = Math::Shape::Vector->new($v2->{x}, $v2->{y});
+        $v3->multiply( $self->dot_product($v2) / $d );
+        $self = $v3;
     }
     else {
-        $self = $v2;
+        $self->{x} = $v2->{x};
+        $self->{y} = $v2->{y};
     }
     $self;
 }
@@ -320,20 +323,34 @@ sub enclosed_angle
 
 =head2 collides
 
-Boolean method that returns 1 if the vector collides with another vector or 0 if not. Requires a Math::Shape::Vector object as an argument
+Boolean method that returns 1 if the vector collides with another L<Math::Shape::Vector> library object or not or 0 if not. Requires a Math::Shape::Vectorlibrary object as an argument
 
     my $v1 = Math::Shape::Vector(4, 2);
     my $v2 = Math::Shape::Vector(4, 2);
 
     $v1->collides($v2); # 1
 
+    my $circle = Math::Shape::Circle->new(0, 0, 3); # x, y and radius
+    $v1->collides($circle); # 0
+
 =cut
 
 sub collides
 {
-    croak 'must pass a vector object' unless $_[1]->isa('Math::Shape::Vector');
+    my ($self, $other_obj) = @_;
 
-    $_[0]->{x} == $_[1]->{x} && $_[0]->{y} == $_[1]->{y} ? 1 : 0;
+    if ($other_obj->isa('Math::Shape::Vector'))
+    {
+        $self->{x} == $other_obj->{x} && $self->{y} == $other_obj->{y} ? 1 : 0;
+    }
+    elsif ($other_obj->isa('Math::Shape::Circle'))
+    {
+        $other_obj->collides($self);
+    }
+    else
+    {
+        croak 'collides must be called with a Math::Shape::Vector library object';
+    }
 }
 
 =head1 REPOSITORY

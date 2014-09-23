@@ -8,7 +8,7 @@ Math::Shape::Vector - A 2d vector library in cartesian space
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 SYNOPSIS
 
@@ -158,12 +158,15 @@ Returns the enclosed angle of another vector. Requires a Math::Shape::Vector obj
 
 =head2 collides
 
-Boolean method that returns 1 if the vector collides with another vector or 0 if not. Requires a Math::Shape::Vector object as an argument
+Boolean method that returns 1 if the vector collides with another L<Math::Shape::Vector> library object or not or 0 if not. Requires a Math::Shape::Vectorlibrary object as an argument
 
     my $v1 = Math::Shape::Vector(4, 2);
     my $v2 = Math::Shape::Vector(4, 2);
 
     $v1->collides($v2); # 1
+
+    my $circle = Math::Shape::Circle->new(0, 0, 3); # x, y and radius
+    $v1->collides($circle); # 0
 
 =head1 REPOSITORY
 

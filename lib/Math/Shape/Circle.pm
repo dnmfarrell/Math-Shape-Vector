@@ -38,17 +38,26 @@ sub collides
 {
     my ($self, $other_obj) = @_;
 
+    my $center = Math::Shape::Vector->new( $self->{center}{x}, $self->{center}{y} );
+
     if ($other_obj->isa('Math::Shape::Circle'))
     {
-        my $vector = Math::Shape::Vector->new( $self->{center}{x}, $self->{center}{y} );
-        $vector->subtract_vector($other_obj->{center});
-        $vector->length <= $self->{radius} + $other_obj->{radius} ? 1 : 0;
+        $center->subtract_vector($other_obj->{center});
+        $center->length <= $self->{radius} + $other_obj->{radius} ? 1 : 0;
     }
     elsif ($other_obj->isa('Math::Shape::Vector'))
     {
-        my $vector = Math::Shape::Vector->new($self->{center}{x}, $self->{center}{y});
-        $vector->subtract_vector($other_obj);
-        $vector->length <= $self->{radius} ? 1 : 0;
+        $center->subtract_vector($other_obj);
+        $center->length <= $self->{radius} ? 1 : 0;
+    }
+    elsif ($other_obj->isa('Math::Shape::Line'))
+    {
+        $center->subtract_vector($other_obj->{base});
+        $center->project($other_obj->{direction});
+
+        my $base_vector = Math::Shape::Vector->new($other_obj->{base}{x}, $other_obj->{base}{y});
+        $base_vector->add_vector($center);
+        $self->collides($base_vector);
     }
     else
     {
