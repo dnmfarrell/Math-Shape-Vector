@@ -5,6 +5,7 @@ package Math::Shape::Circle;
 use 5.008;
 use Carp;
 use Math::Shape::Vector;
+use Math::Shape::Rectangle;
 
 # ABSTRACT: a 2d circle
 
@@ -72,6 +73,27 @@ sub collides
             && $p->length <= $d->length
             && 0 <= $p->dot_product($d)
             ? 1 : 0;
+    }
+    elsif ($other_obj->isa('Math::Shape::Rectangle'))
+    {
+        my $clamped_vector = $other_obj->clamp($self->{center});
+
+        $self->collides($clamped_vector);
+    }
+    elsif ($other_obj->isa('Math::Shape::OrientedRectangle'))
+    {
+        # transform OrientedRectangle into Rectangle
+        my $r_size = $other_obj->{half_extend}->multiply(2);
+        my $lr = Math::Shape::Rectangle->new(0, 0, $r_size->{x}, $r_size->{y});
+
+        # transform $self into local Circle in coordinates of other_obj
+        my $distance = $self->{center}->subtract_vector($other_obj->{center});
+        $distance = $distance->rotate(- $other_obj->{rotation});
+        my $center = $distance->add_vector($other_obj->{half_extend});
+        my $lc = Math::Shape::Circle->new($center->{x}, $center->{y}, $self->{radius});
+
+        # check local objects collide
+        $lc->collides($lr);
     }
     else
     {

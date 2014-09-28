@@ -28,6 +28,24 @@ sub new {
           }, $class;
 }
 
+=head2 clamp
+
+Takes a vector object and returns a new vector object whose x & y coordinates are "clamped" to the size of the rectangle. Requires a L<Math::Shape::Vector> object as an argument.
+
+    my $clamped_vector = $rectangle->clamp($vector);
+
+=cut
+
+sub clamp
+{
+    croak 'clamp must be called with a Math::Shape::Vector object' unless $_[1]->isa('Math::Shape::Vector');
+    my ($self, $vector) = @_;
+
+    my $clamp_x = clamp_on_range($vector->{x}, $self->{origin}->{x}, $self->{origin}->{x} + $self->{size}->{x});
+    my $clamp_y = clamp_on_range($vector->{y}, $self->{origin}->{y}, $self->{origin}->{y} + $self->{size}->{y});
+    Math::Shape::Vector->new($clamp_x, $clamp_y);
+}
+
 =head2 collides
 
 Boolean method returns 1 if the rectangle collides with another rectangle, else returns 0. Requires another rectangle object as an argument.
