@@ -41,5 +41,15 @@ is $circle1->collides($line1), 1;
 is $circle1->collides($line2), 1;
 is $circle1->collides($line3), 0;
 
+# collides LineSegment
+use Math::Shape::LineSegment;
+my $ls1 = Math::Shape::LineSegment->new(1,1, 60, 1);
+my $ls2 = Math::Shape::LineSegment->new(1,-80, 1, 80);
+my $ls3 = Math::Shape::LineSegment->new(0,60, 60, 60);
+
+is $circle1->collides($ls1), 1;
+is $circle1->collides($ls2), 1;
+is $circle1->collides($ls3), 0;
+
 done_testing();
 

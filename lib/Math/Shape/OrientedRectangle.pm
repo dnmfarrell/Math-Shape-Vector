@@ -63,7 +63,7 @@ sub get_edge {
     elsif ($mod == 2)
     {
         $a->{y} = - $a->{y};
-        $b->negate;
+        $b = $b->negate;
     }
      else
     {
@@ -71,10 +71,10 @@ sub get_edge {
         $b->{x} = - $b->{x};
     }
 
-    $a->rotate($self->{rotation});
-    $a->add_vector($self->{center});
-    $b->rotate($self->{rotation});
-    $b->add_vector($self->{center});
+    $a = $a->rotate($self->{rotation});
+    $a = $a->add_vector($self->{center});
+    $b = $b->rotate($self->{rotation});
+    $b = $b->add_vector($self->{center});
 
     Math::Shape::LineSegment->new($a->{x}, $a->{y}, $b->{x}, $b->{y});
 }
@@ -94,11 +94,7 @@ sub axis_is_separating
     my $edge_0 = $self->get_edge(0);
     my $edge_2 = $self->get_edge(2);
 
-    my $n_vector = Math::Shape::Vector->new(
-        $axis->{start}{x},
-        $axis->{start}{y},
-    );
-    $n_vector->subtract_vector($axis->{end});
+    my $n_vector = $axis->{start}->subtract_vector($axis->{end});
 
     my $axis_range = $axis->project($n_vector);
     my $range_0    = $edge_0->project($n_vector);
@@ -118,18 +114,18 @@ Boolean method returns 1 if the OrientedRectangle collides with another Oriented
 
 sub collides {
     croak 'collides must be called with a Math::Shape::OrientedRectangle object' unless $_[1]->isa('Math::Shape::OrientedRectangle');
-    my ($self, $other_rectangle) = @_;
+    my ($self, $other_obj) = @_;
 
     my $edge = $self->get_edge(0);
-    return 0 if $other_rectangle->axis_is_separating($edge);
+    return 0 if $other_obj->axis_is_separating($edge);
 
     $edge = $self->get_edge(1);
-    return 0 if $other_rectangle->axis_is_separating($edge);
+    return 0 if $other_obj->axis_is_separating($edge);
 
-    $edge = $other_rectangle->get_edge(0);
+    $edge = $other_obj->get_edge(0);
     return 0 if $self->axis_is_separating($edge);
 
-    $edge = $other_rectangle->get_edge(1);
+    $edge = $other_obj->get_edge(1);
     return 0 if $self->axis_is_separating($edge);
 
     1;

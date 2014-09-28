@@ -38,16 +38,16 @@ Boolean method returns 1 if the rectangle collides with another rectangle, else 
 
 sub collides {
     croak 'collides must be called with a Math::Shape::Rectangle object' unless $_[1]->isa('Math::Shape::Rectangle');
-    my ($self, $other_rectangle) = @_;
+    my ($self, $other_obj) = @_;
 
     my $a_left = $self->{origin}->{x};
     my $a_right = $a_left + $self->{size}->{x};
-    my $b_left = $other_rectangle->{origin}->{x};
-    my $b_right = $b_left + $other_rectangle->{size}->{x};
+    my $b_left = $other_obj->{origin}->{x};
+    my $b_right = $b_left + $other_obj->{size}->{x};
     my $a_bottom = $self->{origin}->{y};
     my $a_top = $a_bottom + $self->{size}->{y};
-    my $b_bottom = $other_rectangle->{origin}->{y};
-    my $b_top = $b_bottom + $other_rectangle->{size}->{y};
+    my $b_bottom = $other_obj->{origin}->{y};
+    my $b_top = $b_bottom + $other_obj->{size}->{y};
 
     overlap($a_left, $a_right, $b_left, $b_right)
     && overlap($a_bottom, $a_top, $b_bottom, $b_top);

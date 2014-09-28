@@ -70,21 +70,21 @@ Create a new vector. Requires two numerical arguments for the origin and magnitu
 
 =head2 add_vector
 
-Adds a vector to the vector object, updating its x & y values.
+Adds a vector to the vector object, returning a new vector object with the resulting x & y values.
 
-    $vector->add_vector($vector_2);
+    my $new_vector = $vector->add_vector($vector_2);
 
 =head2 subtract_vector
 
-Subtracts a vector from the vector object, updating its x & y values.
+Subtracts a vector from the vector object, returning a new vector object with the resulting x & y values.
 
-    $vector->subtract_vector($vector_2);
+    my $new_vector = $vector->subtract_vector($vector_2);
 
 =head2 negate
 
-Negates the vector's values e.g. (1,3) becomes (-1, -3).
+Returns a new vector with negated values values e.g. (1,3) becomes (-1, -3).
 
-    $vector->negate();
+    my $new_vector = $vector->negate();
 
 =head2 is_equal
 
@@ -94,27 +94,29 @@ Compares a vector to the vector object, returning 1 if they are the same or 0 if
 
 =head2 multiply
 
-Multiplies the vector's x and y values by a number.
+Returns a new vector object with the x and y values multiplied by a number.
 
-    $vector->multiply(3);
+    my $new_vector = $vector->multiply(3);
 
 =head2 divide
 
-Divides the vector's x and y values by a number.
+Returns a new vector object with the x and y values divided by a number.
 
-    $vector->divide(2);
+    my $new_vector = $vector->divide(2);
 
 =head2 rotate
 
-Rotates the vector in radians.
+Returns a new vector with the x and y values rotated in radians.
 
     use Math::Trig ':pi';
 
-    $vector->rotate(pi);
+    my $new_vector = $vector->rotate(pi);
 
 =head2 rotate_90
 
-Rotates the vector 90 degrees anti-clockwise
+Returns a new vector object with the x and y values rotated 90 degrees anti-clockwise.
+
+    my $new_vector = $vector->rotate_90;
 
 =head2 dot_product
 
@@ -124,19 +126,19 @@ Returns the dot product. Requires another Math::Shape::Vector object as an argum
 
 Returns the vector length.
 
-    $vector->length;
+    my $length = $vector->length;
 
 =head2 convert_to_unit_vector
 
-Converts the vector to have a length of 1.
+Returns a new vector object with a length of 1.
 
-    $vector->convert_to_unit_vector;
+    my $unit_vector = $vector->convert_to_unit_vector;
 
 =head2 project
 
-Maps the vector to another vector. Requires a Math::Shape::Vector object as an argument.
+Maps the vector to another vector, returning a new vector object. Requires a Math::Shape::Vector object as an argument.
 
-    $vector->project($vector_2);
+    my $new_vector = $vector->project($vector_2);
 
 =head2 is_parallel
 

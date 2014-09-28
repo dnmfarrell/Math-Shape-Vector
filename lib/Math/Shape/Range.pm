@@ -28,9 +28,9 @@ sub new
 
 =head2 sort
 
-Sorts the range so that the min is lower than the max attributes.
+Returns a new range object with the min and max attributes sorted.
 
-    $range->sort;
+    my $sorted_range = $range->sort;
 
 =cut
 
@@ -40,11 +40,14 @@ sub sort
 
     if ($self->{min} > $self->{max})
     {
-        my $new_max = $self->{min};
-        $self->{min} = $self->{max};
-        $self->{max} = $new_max;
+        Math::Shape::Range->new(
+            $self->{max},
+            $self->{min},
+        );
     }
-    return $self;
+    else {
+        $self;
+    }
 }
 
 =head2 is_overlapping

@@ -38,26 +38,40 @@ sub collides
 {
     my ($self, $other_obj) = @_;
 
-    my $center = Math::Shape::Vector->new( $self->{center}{x}, $self->{center}{y} );
-
     if ($other_obj->isa('Math::Shape::Circle'))
     {
-        $center->subtract_vector($other_obj->{center});
+        my $center = $self->{center}->subtract_vector($other_obj->{center});
         $center->length <= $self->{radius} + $other_obj->{radius} ? 1 : 0;
     }
     elsif ($other_obj->isa('Math::Shape::Vector'))
     {
-        $center->subtract_vector($other_obj);
+        my $center = $self->{center}->subtract_vector($other_obj);
         $center->length <= $self->{radius} ? 1 : 0;
     }
     elsif ($other_obj->isa('Math::Shape::Line'))
     {
-        $center->subtract_vector($other_obj->{base});
-        $center->project($other_obj->{direction});
+        my $center = $self->{center}->subtract_vector($other_obj->{base});
+        my $project = $center->project($other_obj->{direction});
 
-        my $base_vector = Math::Shape::Vector->new($other_obj->{base}{x}, $other_obj->{base}{y});
-        $base_vector->add_vector($center);
+        my $base_vector = $other_obj->{base}->add_vector($project);
         $self->collides($base_vector);
+    }
+    elsif ($other_obj->isa('Math::Shape::LineSegment'))
+    {
+        # test collision of both LineSegment start/end points
+        return 1 if $self->collides($other_obj->{start});
+        return 1 if $self->collides($other_obj->{end});
+
+        # test collision of nearest point on LineSegment with circle
+        my $d  = $other_obj->{end}->subtract_vector($other_obj->{start});
+        my $lc = $self->{center}->subtract_vector($other_obj->{start});
+        my $p  = $lc->project($d);
+        my $nearest = $other_obj->{start}->add_vector($p);
+
+        $self->collides($nearest)
+            && $p->length <= $d->length
+            && 0 <= $p->dot_product($d)
+            ? 1 : 0;
     }
     else
     {
