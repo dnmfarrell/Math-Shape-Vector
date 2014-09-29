@@ -68,13 +68,13 @@ sub is_overlapping
     overlap($_[0]->{min}, $_[0]->{max}, $_[1]->{min}, $_[1]->{max});
 }
 
-=head2 get_hull
+=head2 hull
 
 Returns a new Range object of the hull of two ranges. Requires another Math::Shape::Range object as an argument.
 
 =cut
 
-sub get_hull
+sub hull
 {
     croak 'Must provide another Math::Shape::Range object as argument' unless $_[1]->isa('Math::Shape::Range');
     my ($self, $other_range) = @_;

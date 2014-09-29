@@ -353,7 +353,37 @@ sub collides
     {
         $self->{x} == $other_obj->{x} && $self->{y} == $other_obj->{y} ? 1 : 0;
     }
+    elsif ($other_obj->isa('Math::Shape::LineSegment'))
+    {
+        # test collision of nearest point on LineSegment with vector
+        my $d  = $other_obj->{end}->subtract_vector($other_obj->{start});
+        my $lp = $self->subtract_vector($other_obj->{start});
+        my $pr  = $lp->project($d);
+
+        $lp->is_equal($pr)
+            && $pr->length <= $d->length
+            && 0 <= $pr->dot_product($d)
+            ? 1 : 0;
+
+    }
+    elsif ($other_obj->isa('Math::Shape::Line'))
+    {
+        # test if vector collides with base
+        return 1 if $self->collides($other_obj->{base});
+
+        # test if vector lies on the direction
+        my $lp = $self->subtract_vector($other_obj->{base});
+        $lp->is_parallel($other_obj->{direction});
+    }
+    elsif ($other_obj->isa('Math::Shape::OrientedRectangle'))
+    {
+        $other_obj->collides($self);
+    }
     elsif ($other_obj->isa('Math::Shape::Circle'))
+    {
+        $other_obj->collides($self);
+    }
+    elsif ($other_obj->isa('Math::Shape::Rectangle'))
     {
         $other_obj->collides($self);
     }

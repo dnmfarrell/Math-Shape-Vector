@@ -6,7 +6,9 @@ use 5.008;
 use Carp;
 use Math::Shape::Vector;
 use Math::Shape::Utils;
+use Math::Shape::Line;
 use Math::Shape::LineSegment;
+use Math::Shape::Rectangle;
 
 # ABSTRACT: a 2d oriented rectangle
 
@@ -99,36 +101,204 @@ sub axis_is_separating
     my $axis_range = $axis->project($n_vector);
     my $range_0    = $edge_0->project($n_vector);
     my $range_2    = $edge_2->project($n_vector);
-    my $projection = $range_0->get_hull($range_2);
+    my $projection = $range_0->hull($range_2);
 
     $axis_range->is_overlapping($projection) ? 0 : 1;
 }
 
+=head2 corner
+
+Returns a L<Math::Shape::Vector> object representing a corner of the rectangle. Requires a number between 0-3 for the corner.
+
+    my $corner = $OrientedRectangle->corner(2);
+
+=cut
+
+sub corner
+{
+    croak 'incorrect number of args' unless @_ == 2;
+    my ($self, $nr) = @_;
+
+    my $mod = $nr % 4;
+    my $v;
+
+    if ($mod == 0)
+    {
+        $v = Math::Shape::Vector->new(
+            - $self->{half_extend}{x},
+            $self->{half_extend}{y},
+        );
+    }
+    elsif ($mod == 1)
+    {
+        $v = Math::Shape::Vector->new(
+            $self->{half_extend}{x},
+            $self->{half_extend}{y},
+        );
+    }
+    elsif ($mod == 2)
+    {
+        $v = Math::Shape::Vector->new(
+            $self->{half_extend}{x},
+            - $self->{half_extend}{y},
+        );
+    }
+    elsif ($mod == 3)
+    {
+        $v = Math::Shape::Vector->new(
+            $self->{half_extend}{x},
+            $self->{half_extend}{y},
+        );
+        $v = $v->negate;
+    }
+    else
+    {
+        croak 'corner() should be called with a number between 0-3';
+    }
+    my $c = $v->rotate($self->{rotation});
+    $c->add_vector($self->{center});
+}
+
+
+=head2 hull
+
+Returns a L<Math::Shape::Rectangle> object representing the hull of the oriented rectangle.
+
+=cut
+
+sub hull
+{
+    my $self = shift;
+
+    # create a rectangle at the same center point as $self
+    my $h = Math::Shape::Rectangle->new(
+        $self->{center}{x},
+        $self->{center}{y},
+        0,
+        0,
+    );
+
+    # enlarge the rectangle by every corner vector of $self
+    for (0..3)
+    {
+        my $corner = $self->corner($_);
+        $h = $h->enlarge($corner);
+    }
+
+    # return the hull
+    $h;
+}
+
 =head2 collides
 
-Boolean method returns 1 if the OrientedRectangle collides with another OrientedRectangle, else returns 0. Requires another OrientedRectangle object as an argument.
+Boolean method returns 1 if the OrientedRectangle collides with another L<Math::Shape::Vector> library object, else returns 0. Requires a L<Math::Shape::Vector> library object as an argument.
 
-    my $is collision = $OrientedRectangle->collides($other_OrientedRectangle);
+    if($OrientedRectangle->collides($other_OrientedRectangle))
+    {
+        ...
+    }
 
 =cut
 
 sub collides {
-    croak 'collides must be called with a Math::Shape::OrientedRectangle object' unless $_[1]->isa('Math::Shape::OrientedRectangle');
     my ($self, $other_obj) = @_;
 
-    my $edge = $self->get_edge(0);
-    return 0 if $other_obj->axis_is_separating($edge);
+    if ($other_obj->isa('Math::Shape::OrientedRectangle'))
+    {
+        my $edge = $self->get_edge(0);
+        return 0 if $other_obj->axis_is_separating($edge);
 
-    $edge = $self->get_edge(1);
-    return 0 if $other_obj->axis_is_separating($edge);
+        $edge = $self->get_edge(1);
+        return 0 if $other_obj->axis_is_separating($edge);
 
-    $edge = $other_obj->get_edge(0);
-    return 0 if $self->axis_is_separating($edge);
+        $edge = $other_obj->get_edge(0);
+        return 0 if $self->axis_is_separating($edge);
 
-    $edge = $other_obj->get_edge(1);
-    return 0 if $self->axis_is_separating($edge);
+        $edge = $other_obj->get_edge(1);
+        return 0 if $self->axis_is_separating($edge);
 
-    1;
+        1;
+    }
+    elsif ($other_obj->isa('Math::Shape::Vector'))
+    {
+        # convert into rectangle and use rectangle's collides() method
+        my $size = $self->{half_extend}->multiply(2);
+        my $lr = Math::Shape::Rectangle->new(
+            0,
+            0,
+            $size->{x},
+            $size->{y},
+        );
+
+        my $lp = $other_obj->subtract_vector($self->{center});
+        $lp = $lp->rotate(- $self->{rotation});
+        $lp = $lp->add_vector($self->{half_extend});
+        $lr->collides($lp);
+    }
+    elsif ($other_obj->isa('Math::Shape::Line'))
+    {
+        my $size = $self->{center}->multiply(2);
+        my $lr = Math::Shape::Rectangle->new(
+            0,
+            0,
+            $size->{x},
+            $size->{y},
+        );
+
+        my $base = $other_obj->{base}->subtract_vector($self->{center});
+        $base = $base->rotate(- $self->{rotation});
+        $base = $base->add_vector($self->{half_extend});
+        my $direction = $other_obj->{direction}->rotate(- $self->{rotation});
+
+        my $ll = Math::Shape::Line->new(
+            $base->{x},
+            $base->{y},
+            $direction->{x},
+            $direction->{y},
+        );
+
+        $lr->collides($ll);
+    }
+    elsif ($other_obj->isa('Math::Shape::LineSegment'))
+    {
+        my $size = $self->{center}->multiply(2);
+        my $lr = Math::Shape::Rectangle->new(
+            0,
+            0,
+            $size->{x},
+            $size->{y},
+        );
+
+        my $ls_p1 = $other_obj->{start}->subtract_vector($self->{center});
+        $ls_p1 = $ls_p1->rotate(- $self->{rotation});
+        $ls_p1 = $ls_p1->add_vector($self->{half_extend});
+
+        my $ls_p2 = $other_obj->{end}->subtract_vector($self->{center});
+        $ls_p2 = $ls_p2->rotate(- $self->{rotation});
+        $ls_p2 = $ls_p2->add_vector($self->{half_extend});
+
+        my $ls = Math::Shape::LineSegment->new(
+            $ls_p1->{x},
+            $ls_p1->{y},
+            $ls_p2->{x},
+            $ls_p2->{y},
+        );
+
+        $lr->collides($ls);
+    }
+    # call the other objects collides() method
+    elsif ($other_obj->isa('Math::Shape::Rectangle'))
+    {
+        $other_obj->collides($self);
+    }
+    elsif ($other_obj->isa('Math::Shape::Circle'))
+    {
+        $other_obj->collides($self);
+    }
+    else
+    {
+        croak 'collides must be called with a Math::Shape::Vector library object';
+    }
 }
 
 1;

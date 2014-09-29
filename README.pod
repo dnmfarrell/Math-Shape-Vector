@@ -8,7 +8,7 @@ Math::Shape::Vector - A 2d vector library in cartesian space
 
 =head1 VERSION
 
-version 0.09
+version 0.1
 
 =head1 SYNOPSIS
 
