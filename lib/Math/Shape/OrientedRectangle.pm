@@ -261,7 +261,7 @@ sub collides {
     }
     elsif ($other_obj->isa('Math::Shape::LineSegment'))
     {
-        my $size = $self->{center}->multiply(2);
+        my $size = $self->{half_extend}->multiply(2);
         my $lr = Math::Shape::Rectangle->new(
             0,
             0,
