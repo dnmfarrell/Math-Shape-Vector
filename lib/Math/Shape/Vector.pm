@@ -364,7 +364,6 @@ sub collides
             && $pr->length <= $d->length
             && 0 <= $pr->dot_product($d)
             ? 1 : 0;
-
     }
     elsif ($other_obj->isa('Math::Shape::Line'))
     {
@@ -393,13 +392,46 @@ sub collides
     }
 }
 
+=head2 distance
+
+Returns the distance from the vector to the nearest point of another shape. Requires an L<Math::Shape::Vector> library object as an argument. Currently only implemented for vector and circle objects. For OrientedRectangle objects, distance uses the distance to the circle hull of the OrientedRectangle (not completely accurate).
+
+    my $distance = $vector->distance($other_vector);
+
+=cut
+
+sub distance
+{
+    my ($self, $other_obj) = @_;
+
+    if ($other_obj->isa('Math::Shape::Vector'))
+    {
+        $self->subtract_vector($other_obj)->length;
+    }
+    elsif ($other_obj->isa('Math::Shape::Circle'))
+    {
+        $self->subtract_vector($other_obj->{center})->length
+        - $other_obj->{radius};
+    }
+    elsif ($other_obj->isa('Math::Shape::OrientedRectangle'))
+    {
+        my $circle_hull = $other_obj->circle_hull;
+        $self->subtract_vector($circle_hull->{center})->length
+        - $circle_hull->{radius};
+    }
+    else
+    {
+        croak 'distance() must be called with a Math::Shape::Vector library object';
+    }
+}
+
 =head1 REPOSITORY
 
 L<https://github.com/sillymoose/Math-Shape-Vector.git>
 
 =head1 THANKS
 
-The source code for this object was inspired by the code in Thomas Schwarzl's 2d collision detection book L<http://www.collisiondetection2d.net>.
+The source code for this class was inspired by the code in Thomas Schwarzl's 2d collision detection book L<http://www.collisiondetection2d.net>.
 
 =cut
 

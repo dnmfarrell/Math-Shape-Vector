@@ -9,6 +9,7 @@ use Math::Shape::Utils;
 use Math::Shape::Line;
 use Math::Shape::LineSegment;
 use Math::Shape::Rectangle;
+use Math::Shape::Circle;
 
 # ABSTRACT: a 2d oriented rectangle
 
@@ -187,6 +188,23 @@ sub hull
 
     # return the hull
     $h;
+}
+
+=head2 circle_hull
+
+Returns a new L<Math::Shape::Circle> object representing the hull of the oriented rectangle.
+
+=cut
+
+sub circle_hull
+{
+    my $self = shift;
+
+    Math::Shape::Circle->new(
+        $self->{center}->{x},
+        $self->{center}->{y},
+        $self->{half_extend}->length,
+    );
 }
 
 =head2 collides
