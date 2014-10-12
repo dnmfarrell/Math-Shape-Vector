@@ -242,8 +242,8 @@ Returns the vector length.
 sub length {
     my $self = shift;
     # avoid division by zero for null vectors
-    my $sum_of_squares = ( $self->{x} || 0 ) ** 2
-                         + ( $self->{y} || 0 ) ** 2;
+    my $sum_of_squares = $self->{x} ** 2 + $self->{y} ** 2;
+
     return 0 unless $sum_of_squares;
     sqrt $sum_of_squares;
 }
@@ -260,8 +260,12 @@ sub convert_to_unit_vector {
     my $self = shift;
 
     my $length = $self->length;
-    $length = 1 unless $length > 0;
-    $self->divide($length)
+
+    # if the vector length is zero (or lower?) return self
+    return $self if $length < 0;
+
+    # else return unit vector
+    $self->divide($length);
 }
 
 =head2 project
@@ -321,11 +325,8 @@ sub enclosed_angle
     croak 'must pass a vector object' unless $_[1]->isa('Math::Shape::Vector');
     my ($self, $v2) = @_;
 
-    my $ua = $self;
-    $ua->unit_vector;
-
-    my $ub = $v2;
-    $ub->unit_vector;
+    my $ua = $self->convert_to_unit_vector;
+    my $ub = $v2->convert_to_unit_vector;
 
     acos( $ua->dot_product($ub) );
 }
