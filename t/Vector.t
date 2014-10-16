@@ -182,4 +182,11 @@ is $v41->header_vector($v43)->{y}, -0.707106781186547;
 is $v41->header_vector($v44)->{x}, 0;
 is $v41->header_vector($v45)->{y}, -0.894427190999916;
 
+# stringify, method and context
+my $v46 = Math::Shape::Vector->new(0,0);
+my $v47 = Math::Shape::Vector->new(-1,750);
+is $v46->stringify, 'Vector x: 0, y: 0';
+is sprintf('%s', $v47), 'Vector x: -1, y: 750';
+
+
 done_testing();

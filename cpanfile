@@ -3,6 +3,7 @@ requires "Exporter" => "0";
 requires "List::Util" => "0";
 requires "Math::Trig" => "0";
 requires "base" => "0";
+requires "overload" => "0";
 requires "perl" => "5.008";
 requires "strict" => "0";
 requires "warnings" => "0";

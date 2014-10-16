@@ -460,6 +460,19 @@ sub distance
     }
 }
 
+use overload
+    '""' => \&stringify;
+
+sub stringify
+{
+    my $string = 'Vector ';
+    for (sort keys %{$_[0]})
+    {
+       $string .= "$_: $_[0]->{$_}, ";
+    }
+    substr $string, 0, -2;
+}
+
 =head1 REPOSITORY
 
 L<https://github.com/sillymoose/Math-Shape-Vector.git>
