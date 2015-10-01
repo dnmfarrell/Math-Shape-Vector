@@ -204,11 +204,11 @@ The source code for this class was inspired by the code in Thomas Schwarzl's 2d 
 
 =head1 AUTHOR
 
-David Farrell <sillymoos@cpan.org>
+David Farrell <dfarrell@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by David Farrell.
+This software is copyright (c) 2015 by David Farrell.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

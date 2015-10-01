@@ -1,5 +1,8 @@
 Change history for Math::Shape::Vector
 
+0.15    2015/10/01
+        -Fixed broken tests caused by CPU float sizes in t/Vector.t
+
 0.14    2014/10/15
         -Added radians() and header_vector methods.
 

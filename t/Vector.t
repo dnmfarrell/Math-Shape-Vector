@@ -178,9 +178,11 @@ my $v43 = Math::Shape::Vector->new(-2,-2);
 my $v44 = Math::Shape::Vector->new(0,-3);
 my $v45 = Math::Shape::Vector->new(-100,-200);
 is $v41->header_vector($v42)->{x}, 1;
-is $v41->header_vector($v43)->{y}, -0.707106781186547;
+cmp_ok sprintf("%.10f", $v41->header_vector($v43)->{y}),
+  '==', -0.7071067812;
 is $v41->header_vector($v44)->{x}, 0;
-is $v41->header_vector($v45)->{y}, -0.894427190999916;
+cmp_ok sprintf("%.10f", $v41->header_vector($v45)->{y}),
+  '==', -0.8944271910;
 
 # stringify, method and context
 my $v46 = Math::Shape::Vector->new(0,0);
